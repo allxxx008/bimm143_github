@@ -1,0 +1,198 @@
+---
+title: "Class 7: Machine Learning 1"
+author: "Allen (A16897142)"
+format: pdf
+toc: True
+---
+
+We will be exploring unsupervised machine learning methods. The first ones are clustering and dimensionality reduction.
+
+## Clustering
+
+Let's make up some data to cluster where we know what the answer will be. The `rnorm()` function will be able to help us.
+
+```{r}
+hist(rnorm(1000,mean=3))
+```
+
+Now we want to return 30 numbers centered on -3
+
+```{r}
+tmp <- c(rnorm (30,mean=-3),
+rnorm (30, mean=+3))
+
+x <- cbind(x=tmp,y=rev(tmp))
+
+x
+```
+
+Now plot `x`
+
+```{r}
+plot(x)
+```
+
+### K-means
+
+Base R's main function for K-means clustering is called `kmeans()`:
+
+```{r}
+km <- kmeans(x,centers =2)
+km
+```
+The`kmeans()`function is now able to return a list with 9 components and you can see the named componenets of any list with `attribuets()` function.
+
+```{r}
+attributes(km)
+```
+
+> How many points are in each cluster?
+
+```{r}
+km$size
+```
+> Cluster Membership/Assignment:
+
+```{r}
+km$cluster
+```
+
+> Cluster center:
+
+```{r}
+km$centers
+```
+
+> Make a plot of `kmeans()` results showing cluster assignment using different colors for each group or points and cluster centers in blue.
+
+```{r}
+plot(x,col=km$cluster)
+points (km$centers,col="blue",pch=15, cex=2)
+```
+> Run `kmeans()` again on `x` and this cluster into 4 groups/clusters and plot the same resulting figure as above:
+
+```{r}
+km4 <- kmeans(x,centers =4)
+plot(x,col=km4$cluster)
+points (km4$centers,col="blue",pch=15, cex=2)
+```
+
+> **key-point**: K-means clustering is super popular but can easily be misused. A limitation is that it can force a clustering pattern even if data shows an otherwise natural grouping that does not exist in terms of `centers`.
+
+### Hierarchal Clustering
+
+The main function in base R for Hierarchical Clustering is called `hclust()`
+
+Note: You can not just pass a data set as is into `hclust()`. You need to give a distance matrix.
+```{r}
+d <- dist(x)
+hc <- hclust(d)
+hc
+```
+
+The results of `hclust()` are not very useful typically. And there is no useful `print()` method. However, there is a special `plot()`.
+
+```{r}
+plot(hc)
+abline(h=8,col="red")
+```
+
+To get our cluster assignment aka membership vector, you will need to cut the tree at the goal posts in different areas.
+
+```{r}
+grps <- cutree(hc, h=8)
+grps
+```
+
+```{r}
+table(grps)
+grps
+```
+
+```{r}
+plot(x, col=grps)
+```
+
+Hierarchical Clustering is distinct as the dendrogram can reveal groups in your data that K-means clustering can not accomplish.
+
+## Principal Component Analysis (PCA)
+
+PCA is used as a dimensional reduction technique and to find which dimension is the primary dimenstion in the data.
+
+Data from the UK on food consumption will be used.
+
+```{r}
+url <- "https://tinyurl.com/UK-foods"
+x <- read.csv(url)
+head(x)
+```
+
+```{r}
+rownames(x) <- x[,1]
+x <- x[,-1]
+head(x)
+```
+
+```{r}
+url <- "https://tinyurl.com/UK-foods"
+x <- read.csv(url, row.names=1)
+head(x)
+```
+
+```{r}
+barplot(as.matrix(x), beside=T, col=rainbow(nrow(x)))
+```
+
+A "paris" plot can be useful as it compares two countries. Wherever the country is on axis wise is where it is on the pairs plot.
+
+```{r}
+pairs(x, col=rainbow(10), pch=16)
+```
+
+## PCA to the rescue!
+
+The main function in base R for PCA is `prcomp()`.
+
+```{r}
+## the PCA code
+pca <- prcomp(t(x))
+##overview of results
+summary (pca)
+```
+
+The `prcomp()`function returns a list object with our results.
+
+```{r}
+attributes(pca)
+```
+
+The main results that we are looking for are `pca$x` and `pca$rotation`. `pcz$x ` contains the scores of data on the PC axis we use the make our PCA plot with. 
+
+```{r}
+pca$x
+```
+
+
+```{r}
+library(ggplot2)
+library(ggrepel)
+
+#Make a plot of pca$x with PC1 vs PC2
+
+ggplot(pca$x)+
+  aes(PC1, PC2, label=rownames(pca$x))+
+  geom_point()+
+  geom_text_repel()
+```
+Figure 1: Plot demonstrating different countries on their average food group consumption aligned on PC1 axis vs PC2 axis using Principal Component Analysis.
+
+`pca$rotation` contains our second major result. To see what PCA is picking up:
+
+```{r}
+ggplot(pca$rotation)+
+  aes(PC1,rownames(pca$rotation))+
+  geom_col()
+```
+Figure 2: Barplot indicating which foods explains the trend on the PC plot. If the bar is negative, that means it is more likely explained by a negative country in the PC plot. If the bar is positive, that means it is more likely explaied by a positive country in the PC plot.
+
+
