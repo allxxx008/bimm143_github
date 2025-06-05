@@ -1,0 +1,71 @@
+---
+title: "Class 11: Comparative Structure Analysis"
+author: "Allen (A16897142)"
+format: html
+toc: True
+---
+
+```{r}
+library(bio3d)
+```
+We will start by analyzing ADK. It is an inhibitor in cancer cells and a great area of research currently.The accession code is "1ake_A"
+
+```{r}
+id <- "1ake_A"
+aa <- get.seq(id)
+aa
+```
+
+Now we search on the PDB database to find the related entries,
+```{r}
+blast <- blast.pdb(aa)
+```
+```{r}
+attributes(blast)
+```
+```{r}
+head(blast$hit.tbl)
+```
+
+Make a summary figure with these results abve:
+```{r}
+hits <- plot(blast)
+```
+
+The top hits are our most similar entries in the results.
+```{r}
+hits$pdb.id
+```
+
+Downloading the pdb information:
+```{r}
+files <- get.pdb(hits$pdb.id, path="pdbs", split=TRUE, gzip=TRUE)
+```
+
+```{r}
+# Align releated PDBs
+pdbs <- pdbaln(files, fit = TRUE, exefile="msa")
+```
+Side Note:
+```{r}
+library(bio3dview)
+
+view.pdbs(pdbs)
+```
+
+This view is better than the data we recieved previously, however it is still hard to see the alignment. It is hard to see which family of sequences are similar.
+
+Let's do a PCA:
+```{r}
+pc <- pca(pdbs)
+plot(pc)
+```
+```{r}
+plot(pc,pc.axes=1:2)
+```
+
+Here is a PDB trajectory for mol-star
+```{r}
+mktrj(pc,file="pca_results.pdb")
+```
+

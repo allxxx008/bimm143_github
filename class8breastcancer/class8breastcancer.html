@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Allen (A16897142)">
+
+<title>Class 8: Mini-Project</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="class8breastcancer_files/libs/clipboard/clipboard.min.js"></script>
+<script src="class8breastcancer_files/libs/quarto-html/quarto.js"></script>
+<script src="class8breastcancer_files/libs/quarto-html/popper.min.js"></script>
+<script src="class8breastcancer_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="class8breastcancer_files/libs/quarto-html/anchor.min.js"></script>
+<link href="class8breastcancer_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="class8breastcancer_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="class8breastcancer_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="class8breastcancer_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="class8breastcancer_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
+  <li><a href="#data-import" id="toc-data-import" class="nav-link" data-scroll-target="#data-import">Data Import</a></li>
+  <li><a href="#clustering" id="toc-clustering" class="nav-link" data-scroll-target="#clustering">Clustering</a></li>
+  <li><a href="#principal-component-analysis" id="toc-principal-component-analysis" class="nav-link" data-scroll-target="#principal-component-analysis">Principal Component Analysis</a></li>
+  <li><a href="#pca-od-wisc.data" id="toc-pca-od-wisc.data" class="nav-link" data-scroll-target="#pca-od-wisc.data">PCA od wisc.data</a></li>
+  <li><a href="#combining-methods" id="toc-combining-methods" class="nav-link" data-scroll-target="#combining-methods">Combining Methods</a></li>
+  <li><a href="#clustering-on-pca-results" id="toc-clustering-on-pca-results" class="nav-link" data-scroll-target="#clustering-on-pca-results">Clustering on PCA results</a></li>
+  <li><a href="#prediction" id="toc-prediction" class="nav-link" data-scroll-target="#prediction">Prediction</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Class 8: Mini-Project</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Allen (A16897142) </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p>This mini-project explores unsupervised learning techniques applied to the Wisconsin Breast Cancer Diagnostic Data Set, which contains measurements of human breast mass cell nuclei. The project guides the user through exploratory data analysis, performing and interpreting Principal Component Analysis (PCA) to reduce the dimensionality of the data while retaining variance, and applying hierarchical clustering with different linkage methods. It also includes a section on K-means clustering for comparison. The ultimate goal is to combine PCA and clustering to better separate benign and malignant cell samples, evaluating the results using metrics like sensitivity and specificity, and finally demonstrating how to predict the classification of new samples using the developed PCA model.</p>
+</section>
+<section id="data-import" class="level2">
+<h2 class="anchored" data-anchor-id="data-import">Data Import</h2>
+<p>The data will be coming from the University of Wisconsin Medical Center</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://bioboot.github.io/bimm143_S20/class-material/WisconsinCancer.csv"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>wisc.df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url, <span class="at">row.names=</span><span class="dv">1</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(wisc.df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         diagnosis radius_mean texture_mean perimeter_mean area_mean
+842302           M       17.99        10.38         122.80    1001.0
+842517           M       20.57        17.77         132.90    1326.0
+84300903         M       19.69        21.25         130.00    1203.0
+84348301         M       11.42        20.38          77.58     386.1
+84358402         M       20.29        14.34         135.10    1297.0
+843786           M       12.45        15.70          82.57     477.1
+         smoothness_mean compactness_mean concavity_mean concave.points_mean
+842302           0.11840          0.27760         0.3001             0.14710
+842517           0.08474          0.07864         0.0869             0.07017
+84300903         0.10960          0.15990         0.1974             0.12790
+84348301         0.14250          0.28390         0.2414             0.10520
+84358402         0.10030          0.13280         0.1980             0.10430
+843786           0.12780          0.17000         0.1578             0.08089
+         symmetry_mean fractal_dimension_mean radius_se texture_se perimeter_se
+842302          0.2419                0.07871    1.0950     0.9053        8.589
+842517          0.1812                0.05667    0.5435     0.7339        3.398
+84300903        0.2069                0.05999    0.7456     0.7869        4.585
+84348301        0.2597                0.09744    0.4956     1.1560        3.445
+84358402        0.1809                0.05883    0.7572     0.7813        5.438
+843786          0.2087                0.07613    0.3345     0.8902        2.217
+         area_se smoothness_se compactness_se concavity_se concave.points_se
+842302    153.40      0.006399        0.04904      0.05373           0.01587
+842517     74.08      0.005225        0.01308      0.01860           0.01340
+84300903   94.03      0.006150        0.04006      0.03832           0.02058
+84348301   27.23      0.009110        0.07458      0.05661           0.01867
+84358402   94.44      0.011490        0.02461      0.05688           0.01885
+843786     27.19      0.007510        0.03345      0.03672           0.01137
+         symmetry_se fractal_dimension_se radius_worst texture_worst
+842302       0.03003             0.006193        25.38         17.33
+842517       0.01389             0.003532        24.99         23.41
+84300903     0.02250             0.004571        23.57         25.53
+84348301     0.05963             0.009208        14.91         26.50
+84358402     0.01756             0.005115        22.54         16.67
+843786       0.02165             0.005082        15.47         23.75
+         perimeter_worst area_worst smoothness_worst compactness_worst
+842302            184.60     2019.0           0.1622            0.6656
+842517            158.80     1956.0           0.1238            0.1866
+84300903          152.50     1709.0           0.1444            0.4245
+84348301           98.87      567.7           0.2098            0.8663
+84358402          152.20     1575.0           0.1374            0.2050
+843786            103.40      741.6           0.1791            0.5249
+         concavity_worst concave.points_worst symmetry_worst
+842302            0.7119               0.2654         0.4601
+842517            0.2416               0.1860         0.2750
+84300903          0.4504               0.2430         0.3613
+84348301          0.6869               0.2575         0.6638
+84358402          0.4000               0.1625         0.2364
+843786            0.5355               0.1741         0.3985
+         fractal_dimension_worst
+842302                   0.11890
+842517                   0.08902
+84300903                 0.08758
+84348301                 0.17300
+84358402                 0.07678
+843786                   0.12440</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>How many patients/samples are in this dataset?</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(wisc.df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 569</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>How many of the observations have a malignant diagnosis?</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(wisc.df<span class="sc">$</span>diagnosis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  B   M 
+357 212 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(wisc.df<span class="sc">$</span>diagnosis <span class="sc">==</span> <span class="st">"M"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 212</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>How many variables/features in the data are suffixed with _mean?</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(wisc.df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "diagnosis"               "radius_mean"            
+ [3] "texture_mean"            "perimeter_mean"         
+ [5] "area_mean"               "smoothness_mean"        
+ [7] "compactness_mean"        "concavity_mean"         
+ [9] "concave.points_mean"     "symmetry_mean"          
+[11] "fractal_dimension_mean"  "radius_se"              
+[13] "texture_se"              "perimeter_se"           
+[15] "area_se"                 "smoothness_se"          
+[17] "compactness_se"          "concavity_se"           
+[19] "concave.points_se"       "symmetry_se"            
+[21] "fractal_dimension_se"    "radius_worst"           
+[23] "texture_worst"           "perimeter_worst"        
+[25] "area_worst"              "smoothness_worst"       
+[27] "compactness_worst"       "concavity_worst"        
+[29] "concave.points_worst"    "symmetry_worst"         
+[31] "fractal_dimension_worst"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">grep</span>(<span class="st">"mean"</span>,<span class="fu">colnames</span>(wisc.df),<span class="at">value=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10</code></pre>
+</div>
+</div>
+<p>There is a diagnosis column that represents the clinicians consensus that I want to exclude from any future analysis. We will first our data and then compare with the “diagnosis” later.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>diagnosis <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(wisc.df<span class="sc">$</span>diagnosis)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(diagnosis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] M M M M M M
+Levels: B M</code></pre>
+</div>
+</div>
+<p>No we will remove diagnosis from wisc.df</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>wisc.data <span class="ot">&lt;-</span> wisc.df[,<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(wisc.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         radius_mean texture_mean perimeter_mean area_mean smoothness_mean
+842302         17.99        10.38         122.80    1001.0         0.11840
+842517         20.57        17.77         132.90    1326.0         0.08474
+84300903       19.69        21.25         130.00    1203.0         0.10960
+84348301       11.42        20.38          77.58     386.1         0.14250
+84358402       20.29        14.34         135.10    1297.0         0.10030
+843786         12.45        15.70          82.57     477.1         0.12780
+         compactness_mean concavity_mean concave.points_mean symmetry_mean
+842302            0.27760         0.3001             0.14710        0.2419
+842517            0.07864         0.0869             0.07017        0.1812
+84300903          0.15990         0.1974             0.12790        0.2069
+84348301          0.28390         0.2414             0.10520        0.2597
+84358402          0.13280         0.1980             0.10430        0.1809
+843786            0.17000         0.1578             0.08089        0.2087
+         fractal_dimension_mean radius_se texture_se perimeter_se area_se
+842302                  0.07871    1.0950     0.9053        8.589  153.40
+842517                  0.05667    0.5435     0.7339        3.398   74.08
+84300903                0.05999    0.7456     0.7869        4.585   94.03
+84348301                0.09744    0.4956     1.1560        3.445   27.23
+84358402                0.05883    0.7572     0.7813        5.438   94.44
+843786                  0.07613    0.3345     0.8902        2.217   27.19
+         smoothness_se compactness_se concavity_se concave.points_se
+842302        0.006399        0.04904      0.05373           0.01587
+842517        0.005225        0.01308      0.01860           0.01340
+84300903      0.006150        0.04006      0.03832           0.02058
+84348301      0.009110        0.07458      0.05661           0.01867
+84358402      0.011490        0.02461      0.05688           0.01885
+843786        0.007510        0.03345      0.03672           0.01137
+         symmetry_se fractal_dimension_se radius_worst texture_worst
+842302       0.03003             0.006193        25.38         17.33
+842517       0.01389             0.003532        24.99         23.41
+84300903     0.02250             0.004571        23.57         25.53
+84348301     0.05963             0.009208        14.91         26.50
+84358402     0.01756             0.005115        22.54         16.67
+843786       0.02165             0.005082        15.47         23.75
+         perimeter_worst area_worst smoothness_worst compactness_worst
+842302            184.60     2019.0           0.1622            0.6656
+842517            158.80     1956.0           0.1238            0.1866
+84300903          152.50     1709.0           0.1444            0.4245
+84348301           98.87      567.7           0.2098            0.8663
+84358402          152.20     1575.0           0.1374            0.2050
+843786            103.40      741.6           0.1791            0.5249
+         concavity_worst concave.points_worst symmetry_worst
+842302            0.7119               0.2654         0.4601
+842517            0.2416               0.1860         0.2750
+84300903          0.4504               0.2430         0.3613
+84348301          0.6869               0.2575         0.6638
+84358402          0.4000               0.1625         0.2364
+843786            0.5355               0.1741         0.3985
+         fractal_dimension_worst
+842302                   0.11890
+842517                   0.08902
+84300903                 0.08758
+84348301                 0.17300
+84358402                 0.07678
+843786                   0.12440</code></pre>
+</div>
+</div>
+</section>
+<section id="clustering" class="level2">
+<h2 class="anchored" data-anchor-id="clustering">Clustering</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kmeans</span>(wisc.data,<span class="at">centers=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>K-means clustering with 2 clusters of sizes 438, 131
+
+Cluster means:
+  radius_mean texture_mean perimeter_mean area_mean smoothness_mean
+1    12.55630     18.57037       81.12347  496.0619       0.0948845
+2    19.37992     21.69458      128.23130 1185.9298       0.1012946
+  compactness_mean concavity_mean concave.points_mean symmetry_mean
+1       0.09109982     0.06243776          0.03343254     0.1780580
+2       0.14861298     0.17693947          0.10069878     0.1915397
+  fractal_dimension_mean radius_se texture_se perimeter_se  area_se
+1             0.06345402 0.3041909   1.215153     2.152881 23.78529
+2             0.06060290 0.7428038   1.222538     5.250580 95.67817
+  smoothness_se compactness_se concavity_se concave.points_se symmetry_se
+1   0.007173263     0.02347469   0.02874551        0.01063632  0.02061358
+2   0.006598687     0.03217669   0.04241977        0.01567398  0.02030397
+  fractal_dimension_se radius_worst texture_worst perimeter_worst area_worst
+1          0.003747503     14.04390      24.70954        91.93751   619.6479
+2          0.003953389     23.70947      28.91267       158.49618  1753.0229
+  smoothness_worst compactness_worst concavity_worst concave.points_worst
+1        0.1299591         0.2233118       0.2192149           0.09132984
+2        0.1404247         0.3577577       0.4493061           0.19243107
+  symmetry_worst fractal_dimension_worst
+1      0.2835537              0.08328194
+2      0.3118817              0.08616550
+
+Clustering vector:
+   842302    842517  84300903  84348301  84358402    843786    844359  84458202 
+        2         2         2         1         2         1         2         1 
+   844981  84501001    845636  84610002    846226    846381  84667401  84799002 
+        1         1         1         2         2         1         1         1 
+   848406  84862001    849014   8510426   8510653   8510824   8511133    851509 
+        1         2         2         1         1         1         1         2 
+   852552    852631    852763    852781    852973    853201    853401    853612 
+        2         2         1         2         2         2         2         1 
+ 85382601    854002    854039    854253    854268    854941    855133    855138 
+        2         2         2         2         1         1         1         1 
+   855167    855563    855625    856106  85638502    857010  85713702     85715 
+        1         1         2         1         1         2         1         1 
+   857155    857156    857343    857373    857374    857392    857438  85759902 
+        1         1         1         1         1         2         1         1 
+   857637    857793    857810    858477    858970    858981    858986    859196 
+        2         1         1         1         1         1         1         1 
+ 85922302    859283    859464    859465    859471    859487    859575    859711 
+        1         1         1         1         1         1         2         1 
+   859717    859983   8610175   8610404   8610629   8610637   8610862   8610908 
+        2         1         1         2         1         2         2         1 
+   861103   8611161   8611555   8611792   8612080   8612399  86135501  86135502 
+        1         1         2         2         1         2         1         2 
+   861597    861598    861648    861799    861853    862009    862028     86208 
+        1         1         1         1         1         1         1         2 
+    86211    862261    862485    862548    862717    862722    862965    862980 
+        1         1         1         1         1         1         1         1 
+   862989    863030    863031    863270     86355    864018    864033     86408 
+        1         1         1         1         2         1         1         1 
+    86409    864292    864496    864685    864726    864729    864877    865128 
+        1         1         1         1         1         1         2         2 
+   865137     86517    865423    865432    865468     86561    866083    866203 
+        1         2         2         1         1         1         1         2 
+   866458    866674    866714      8670  86730502    867387    867739    868202 
+        1         2         1         1         1         1         2         1 
+   868223    868682    868826    868871    868999    869104    869218    869224 
+        1         1         1         1         1         2         1         1 
+   869254    869476    869691  86973701  86973702    869931 871001501 871001502 
+        1         1         1         1         1         1         1         1 
+  8710441     87106   8711002   8711003   8711202   8711216    871122    871149 
+        1         1         1         1         2         1         1         1 
+  8711561   8711803    871201   8712064   8712289   8712291     87127   8712729 
+        1         2         2         1         2         1         1         2 
+  8712766   8712853  87139402     87163     87164    871641    871642    872113 
+        2         1         1         1         1         1         1         1 
+   872608  87281702    873357    873586    873592    873593    873701    873843 
+        1         1         1         1         2         2         2         1 
+   873885    874158    874217    874373    874662    874839    874858    875093 
+        1         1         2         1         1         1         1         1 
+   875099    875263  87556202    875878    875938    877159    877486    877500 
+        1         1         1         1         1         2         2         1 
+   877501    877989    878796     87880     87930    879523    879804    879830 
+        1         2         2         1         1         1         1         2 
+  8810158   8810436 881046502   8810528   8810703 881094802   8810955   8810987 
+        1         1         2         1         2         1         1         1 
+  8811523   8811779   8811842  88119002   8812816   8812818   8812844   8812877 
+        1         1         2         2         1         1         1         1 
+  8813129  88143502  88147101  88147102  88147202    881861    881972  88199202 
+        1         1         1         1         1         1         2         1 
+ 88203002  88206102    882488  88249602  88299702    883263    883270  88330202 
+        1         2         1         1         2         2         1         2 
+ 88350402    883539    883852  88411702    884180    884437    884448    884626 
+        1         1         1         1         2         1         1         1 
+ 88466802    884689    884948  88518501    885429   8860702    886226    886452 
+        1         1         2         1         2         2         2         1 
+ 88649001    886776    887181  88725602    887549    888264    888570    889403 
+        2         1         2         1         2         2         2         1 
+   889719  88995002   8910251   8910499   8910506   8910720   8910721   8910748 
+        2         2         1         1         1         1         1         1 
+  8910988   8910996   8911163   8911164   8911230   8911670   8911800   8911834 
+        2         1         2         1         1         2         1         1 
+  8912049   8912055     89122   8912280   8912284   8912521   8912909      8913 
+        2         1         2         1         1         1         1         1 
+  8913049  89143601  89143602      8915    891670    891703    891716    891923 
+        1         1         1         1         1         1         1         1 
+   891936    892189    892214    892399    892438    892604  89263202    892657 
+        1         1         1         1         2         1         2         1 
+    89296    893061     89344     89346    893526    893548    893783  89382601 
+        1         1         1         1         1         1         1         1 
+ 89382602    893988    894047    894089    894090    894326    894329    894335 
+        1         1         1         1         1         2         1         1 
+   894604    894618    894855    895100  89511501  89511502     89524    895299 
+        1         2         1         2         1         1         1         1 
+  8953902    895633    896839    896864    897132    897137    897374  89742801 
+        1         1         1         1         1         1         1         2 
+   897604    897630    897880     89812     89813    898143     89827    898431 
+        1         2         1         2         1         1         1         2 
+ 89864002    898677    898678     89869    898690    899147    899187    899667 
+        1         1         1         1         1         1         1         1 
+   899987   9010018    901011   9010258   9010259    901028   9010333 901034301 
+        2         1         1         1         1         1         1         1 
+901034302    901041   9010598   9010872   9010877    901088   9011494   9011495 
+        1         1         1         1         1         2         2         1 
+  9011971   9012000   9012315   9012568   9012795    901288   9013005    901303 
+        2         2         1         1         2         2         1         1 
+   901315   9013579   9013594   9013838    901549    901836     90250     90251 
+        1         1         1         1         1         1         1         1 
+   902727     90291    902975    902976    903011     90312  90317302    903483 
+        1         1         1         1         1         2         1         1 
+   903507    903516    903554    903811  90401601  90401602    904302    904357 
+        2         2         1         1         1         1         1         1 
+ 90439701    904647    904689      9047    904969    904971    905189    905190 
+        2         1         1         1         1         1         1         1 
+ 90524101    905501    905502    905520    905539    905557    905680    905686 
+        2         1         1         1         1         1         1         1 
+   905978  90602302    906024    906290    906539    906564    906616    906878 
+        1         2         1         1         1         1         1         1 
+   907145    907367    907409     90745  90769601  90769602    907914    907915 
+        1         1         1         1         1         1         1         1 
+   908194    908445    908469    908489    908916    909220    909231    909410 
+        2         2         1         1         1         1         1         1 
+   909411    909445  90944601    909777   9110127   9110720   9110732   9110944 
+        1         2         1         1         2         1         2         1 
+   911150 911157302   9111596   9111805   9111843    911201    911202   9112085 
+        1         2         1         2         1         1         1         1 
+  9112366   9112367   9112594   9112712 911296201 911296202   9113156 911320501 
+        1         1         1         1         2         2         1         1 
+911320502   9113239   9113455   9113514   9113538    911366   9113778   9113816 
+        1         1         1         1         2         1         1         1 
+   911384   9113846    911391    911408    911654    911673    911685    911916 
+        1         1         1         1         1         1         1         1 
+   912193     91227    912519    912558    912600    913063    913102    913505 
+        1         1         1         1         1         1         1         2 
+   913512    913535  91376701  91376702    914062    914101    914102    914333 
+        1         1         1         2         2         1         1         1 
+   914366    914580    914769     91485    914862     91504     91505    915143 
+        1         1         2         2         1         1         1         2 
+   915186    915276  91544001  91544002    915452    915460     91550    915664 
+        1         1         1         1         1         1         1         1 
+   915691    915940  91594602    916221    916799    916838    917062    917080 
+        1         1         1         1         2         2         1         1 
+   917092  91762702     91789    917896    917897     91805  91813701  91813702 
+        1         2         1         1         1         1         1         1 
+   918192    918465     91858  91903901  91903902  91930402    919537    919555 
+        1         1         1         1         1         2         1         2 
+ 91979701    919812    921092    921362    921385    921386    921644    922296 
+        1         1         1         1         1         1         1         1 
+   922297    922576    922577    922840    923169    923465    923748    923780 
+        1         1         1         1         1         1         1         1 
+   924084    924342    924632    924934    924964    925236    925277    925291 
+        1         1         1         1         1         1         1         1 
+   925292    925311    925622    926125    926424    926682    926954    927241 
+        1         1         1         2         2         2         1         2 
+    92751 
+        1 
+
+Within cluster sum of squares by cluster:
+[1] 28559677 49383423
+ (between_SS / total_SS =  69.6 %)
+
+Available components:
+
+[1] "cluster"      "centers"      "totss"        "withinss"     "tot.withinss"
+[6] "betweenss"    "size"         "iter"         "ifault"      </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>hc <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(wisc.data))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="class8breastcancer_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Clusters can be extracted from the dendrogram above with the function <code>cutree()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>grps <span class="ot">&lt;-</span> <span class="fu">cutree</span>(hc,<span class="at">k=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<blockquote class="blockquote">
+<p>How many individuals in each cluster</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(grps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>grps
+  1   2 
+549  20 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span> (diagnosis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>diagnosis
+  B   M 
+357 212 </code></pre>
+</div>
+</div>
+<p>Now we can use a cross-table that compares the clusters of <code>grps</code> with <code>diagnosis</code> to see if there are any similarities (are the 20 in <code>grps</code> malignant or not)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(diagnosis,grps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         grps
+diagnosis   1   2
+        B 357   0
+        M 192  20</code></pre>
+</div>
+</div>
+</section>
+<section id="principal-component-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="principal-component-analysis">Principal Component Analysis</h2>
+<p>The main function for PCA in base R is <code>prcomp()</code> and has a default input parameter of <code>scale=FALSE</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
+</div>
+</div>
+<p>A PCA can be done but it could be misleading:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>pc <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(mtcars)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">biplot</span>(pc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="class8breastcancer_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colMeans</span>(mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       mpg        cyl       disp         hp       drat         wt       qsec 
+ 20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750 
+        vs         am       gear       carb 
+  0.437500   0.406250   3.687500   2.812500 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(mtcars,<span class="dv">2</span>,sd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        mpg         cyl        disp          hp        drat          wt 
+  6.0269481   1.7859216 123.9386938  68.5628685   0.5346787   0.9784574 
+       qsec          vs          am        gear        carb 
+  1.7869432   0.5040161   0.4989909   0.7378041   1.6152000 </code></pre>
+</div>
+</div>
+<p>Let’s scale the data before we conduct PCA to get a better representation and analysis of the columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>mtscale <span class="ot">&lt;-</span> <span class="fu">scale</span>(mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">colMeans</span>(mtscale))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> mpg  cyl disp   hp drat   wt qsec   vs   am gear carb 
+   0    0    0    0    0    0    0    0    0    0    0 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(mtscale,<span class="dv">2</span>,sd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> mpg  cyl disp   hp drat   wt qsec   vs   am gear carb 
+   1    1    1    1    1    1    1    1    1    1    1 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>pc.scale <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(mtscale)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can look at the two main results figures from PCA - the “PC plot” (or score plot/PC1 vs PC2 plot). The “loadings plot” or how the original variables contribute to the new PC.</p>
+<p>A loadings plot of the unscaled PCA results:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pc<span class="sc">$</span>rotation)<span class="sc">+</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(PC1,<span class="fu">rownames</span>(pc<span class="sc">$</span>rotation))<span class="sc">+</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="class8breastcancer_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pc.scale<span class="sc">$</span>rotation)<span class="sc">+</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(PC1,<span class="fu">rownames</span>(pc<span class="sc">$</span>rotation))<span class="sc">+</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="class8breastcancer_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>PC plot of scaled PCA results:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pc.scale<span class="sc">$</span>x)<span class="sc">+</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(PC1,PC2,<span class="at">label=</span><span class="fu">rownames</span>(pc.scale<span class="sc">$</span>x))<span class="sc">+</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: ggrepel: 6 unlabeled data points (too many overlaps). Consider
+increasing max.overlaps</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="class8breastcancer_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Remember that in general, we will set <code>scale=T</code> when we conudct PCAs.</p>
+</blockquote>
+</section>
+<section id="pca-od-wisc.data" class="level2">
+<h2 class="anchored" data-anchor-id="pca-od-wisc.data">PCA od wisc.data</h2>
+<p>Let’s check out the SD and mean in <code>wisc.data</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>wisc.pc <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(wisc.data,<span class="at">scale=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To see how well PCA is doing here in terms f capturing spread, we use <code>summary()</code> to help:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(wisc.pc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                          PC1    PC2     PC3     PC4     PC5     PC6     PC7
+Standard deviation     3.6444 2.3857 1.67867 1.40735 1.28403 1.09880 0.82172
+Proportion of Variance 0.4427 0.1897 0.09393 0.06602 0.05496 0.04025 0.02251
+Cumulative Proportion  0.4427 0.6324 0.72636 0.79239 0.84734 0.88759 0.91010
+                           PC8    PC9    PC10   PC11    PC12    PC13    PC14
+Standard deviation     0.69037 0.6457 0.59219 0.5421 0.51104 0.49128 0.39624
+Proportion of Variance 0.01589 0.0139 0.01169 0.0098 0.00871 0.00805 0.00523
+Cumulative Proportion  0.92598 0.9399 0.95157 0.9614 0.97007 0.97812 0.98335
+                          PC15    PC16    PC17    PC18    PC19    PC20   PC21
+Standard deviation     0.30681 0.28260 0.24372 0.22939 0.22244 0.17652 0.1731
+Proportion of Variance 0.00314 0.00266 0.00198 0.00175 0.00165 0.00104 0.0010
+Cumulative Proportion  0.98649 0.98915 0.99113 0.99288 0.99453 0.99557 0.9966
+                          PC22    PC23   PC24    PC25    PC26    PC27    PC28
+Standard deviation     0.16565 0.15602 0.1344 0.12442 0.09043 0.08307 0.03987
+Proportion of Variance 0.00091 0.00081 0.0006 0.00052 0.00027 0.00023 0.00005
+Cumulative Proportion  0.99749 0.99830 0.9989 0.99942 0.99969 0.99992 0.99997
+                          PC29    PC30
+Standard deviation     0.02736 0.01153
+Proportion of Variance 0.00002 0.00000
+Cumulative Proportion  1.00000 1.00000</code></pre>
+</div>
+</div>
+<p>Let’s make the PC1 vs PC2 figure:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(wisc.pc<span class="sc">$</span>x)<span class="sc">+</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(PC1,PC2, <span class="at">col=</span>diagnosis)<span class="sc">+</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"PC1(44.38%)"</span>)<span class="sc">+</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"PC2 (19%)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="class8breastcancer_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Q4:From your results, what proportion of the original variance is captured by the first principal components (PC1)?</p>
+</blockquote>
+<p>44.27% is captured by PC1</p>
+<blockquote class="blockquote">
+<p>Q5. How many principal components (PCs) are required to describe at least 70% of the original variance in the data?</p>
+</blockquote>
+<p>3 PCs are required to describe at least 70% of the original variance.</p>
+<blockquote class="blockquote">
+<p>Q6. How many principal components (PCs) are required to describe at least 90% of the original variance in the data?</p>
+</blockquote>
+<p>7 PCs are required to describe at least 90% of the original variance.</p>
+<blockquote class="blockquote">
+<p>Q7. What stands out to you about this plot (biplot)? Is it easy or difficult to understand? Why?</p>
+</blockquote>
+<p>The plot is very messy which makes it difficult to analyze and understand</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">biplot</span>(wisc.pc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="class8breastcancer_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Q8. Generate a similar plot for principal components 1 and 3. What do you notice about these plots?</p>
+</blockquote>
+<p>Because PC2 caputures a greater amount of variance, there seems to be a better seperation of the diagnosis points in the plot. There was a mixture in the sepearation when you plotted PC3 instead of PC2.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(wisc.pc<span class="sc">$</span>x[ ], <span class="at">col =</span> diagnosis, </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"PC1"</span>, <span class="at">ylab =</span> <span class="st">"PC3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="class8breastcancer_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Q9. For the first principal component, what is the component of the loading vector (i.e.&nbsp;wisc.pr$rotation[,1]) for the feature concave.points_mean?</p>
+</blockquote>
+<p>-0.26085376</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>wisc.pc<span class="sc">$</span>rotation[,<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            radius_mean            texture_mean          perimeter_mean 
+            -0.21890244             -0.10372458             -0.22753729 
+              area_mean         smoothness_mean        compactness_mean 
+            -0.22099499             -0.14258969             -0.23928535 
+         concavity_mean     concave.points_mean           symmetry_mean 
+            -0.25840048             -0.26085376             -0.13816696 
+ fractal_dimension_mean               radius_se              texture_se 
+            -0.06436335             -0.20597878             -0.01742803 
+           perimeter_se                 area_se           smoothness_se 
+            -0.21132592             -0.20286964             -0.01453145 
+         compactness_se            concavity_se       concave.points_se 
+            -0.17039345             -0.15358979             -0.18341740 
+            symmetry_se    fractal_dimension_se            radius_worst 
+            -0.04249842             -0.10256832             -0.22799663 
+          texture_worst         perimeter_worst              area_worst 
+            -0.10446933             -0.23663968             -0.22487053 
+       smoothness_worst       compactness_worst         concavity_worst 
+            -0.12795256             -0.21009588             -0.22876753 
+   concave.points_worst          symmetry_worst fractal_dimension_worst 
+            -0.25088597             -0.12290456             -0.13178394 </code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Q10. What is the minimum number of principal components required to explain 80% of the variance of the data?</p>
+</blockquote>
+<p>5 PCs required to explain 80% of the variance in the data.</p>
+</section>
+<section id="combining-methods" class="level2">
+<h2 class="anchored" data-anchor-id="combining-methods">Combining Methods</h2>
+<p>Using our PCA results, we can use them to help us with other analysis such as clustering.</p>
+</section>
+<section id="clustering-on-pca-results" class="level2">
+<h2 class="anchored" data-anchor-id="clustering-on-pca-results">Clustering on PCA results</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>wisc.pc.hclust <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(wisc.pc<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]),<span class="at">method=</span><span class="st">"ward.D2"</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(wisc.pc.hclust)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="class8breastcancer_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To cut our tree:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>pc.grps <span class="ot">&lt;-</span> <span class="fu">cutree</span>(wisc.pc.hclust, <span class="at">k=</span><span class="dv">2</span>)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(pc.grps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>pc.grps
+  1   2 
+195 374 </code></pre>
+</div>
+</div>
+<p>And then to compare cluster groups to expert diagnosis:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(diagnosis, pc.grps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         pc.grps
+diagnosis   1   2
+        B  18 339
+        M 177  35</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Q15. How well does the newly created model with four clusters separate out the two diagnoses?</p>
+</blockquote>
+<p>Better separation of the two diagnosis and can show which cases, and how many are “false positives” or “false negatives”</p>
+<blockquote class="blockquote">
+<p>Q16. How well do the hierarchical clustering models you created in previous sections (i.e.&nbsp;before PCA) do in terms of separating the diagnoses? Again, use the table() function to compare the output of each model (wisc.km$cluster and wisc.hclust.clusters) with the vector containing the actual diagnoses.</p>
+</blockquote>
+<p>They did really badly initially, but after PCA they were a lot better. The new PCA variables game a better seperation of Malignant vs Benign cases.</p>
+</section>
+<section id="prediction" class="level2">
+<h2 class="anchored" data-anchor-id="prediction">Prediction</h2>
+<blockquote class="blockquote">
+<p>Q18. Which of these new patients should we prioritize for follow up based on your results?</p>
+</blockquote>
+<p>Based on the results below, I would prioritize patient 2 as they are in the malignant cases. They might have malignant cells you would want to check out.</p>
+<p>Our PCA model will be used for an analysis of any data that is “unseen”. In this cause it is data from UMich.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">#url &lt;- "new_samples.csv"</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://tinyurl.com/new-samples-CSV"</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>new <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url)</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>npc <span class="ot">&lt;-</span> <span class="fu">predict</span>(wisc.pc, <span class="at">newdata=</span>new)</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>npc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           PC1       PC2        PC3        PC4       PC5        PC6        PC7
+[1,]  2.576616 -3.135913  1.3990492 -0.7631950  2.781648 -0.8150185 -0.3959098
+[2,] -4.754928 -3.009033 -0.1660946 -0.6052952 -1.140698 -1.2189945  0.8193031
+            PC8       PC9       PC10      PC11      PC12      PC13     PC14
+[1,] -0.2307350 0.1029569 -0.9272861 0.3411457  0.375921 0.1610764 1.187882
+[2,] -0.3307423 0.5281896 -0.4855301 0.7173233 -1.185917 0.5893856 0.303029
+          PC15       PC16        PC17        PC18        PC19       PC20
+[1,] 0.3216974 -0.1743616 -0.07875393 -0.11207028 -0.08802955 -0.2495216
+[2,] 0.1299153  0.1448061 -0.40509706  0.06565549  0.25591230 -0.4289500
+           PC21       PC22       PC23       PC24        PC25         PC26
+[1,]  0.1228233 0.09358453 0.08347651  0.1223396  0.02124121  0.078884581
+[2,] -0.1224776 0.01732146 0.06316631 -0.2338618 -0.20755948 -0.009833238
+             PC27        PC28         PC29         PC30
+[1,]  0.220199544 -0.02946023 -0.015620933  0.005269029
+[2,] -0.001134152  0.09638361  0.002795349 -0.019015820</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(wisc.pc<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span>diagnosis)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(npc[,<span class="dv">1</span>], npc[,<span class="dv">2</span>], <span class="at">col=</span><span class="st">"blue"</span>, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">cex=</span><span class="dv">3</span>)</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(npc[,<span class="dv">1</span>], npc[,<span class="dv">2</span>], <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">col=</span><span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="class8breastcancer_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

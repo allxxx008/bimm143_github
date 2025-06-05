@@ -1,0 +1,115 @@
+---
+title: "Class 10: Structural Bioinformatics"
+author: "Allen (A16897142)"
+format: pdf
+toc: True
+---
+
+## PDB Database
+
+The [Protein Data Bank](https://www.rcsb.org/) (or PDB) is the second oldest database and is the main one for biomolecular structure data.
+
+```{r}
+stats <- read.csv("Data Export Summary.csv", row.names=1)
+stats[] <- lapply(stats, function(x) as.numeric(gsub(",", "", x)))
+head(stats)
+```
+
+Here is how you write it as a function:
+```{r}
+comma.sum <- function(x){
+  y <- gsub(",","",x)
+  ##G sub makes it , to no ,
+  return (sum(as.numeric(y)))
+}
+```
+
+> Q1: What percentage of structures in the PDB are solved by X-Ray and Electron Microscopy.
+
+```{r}
+xray.sum <- comma.sum(stats$Neutron)
+em.sum <- comma.sum(stats$EM)
+total.sum <- comma.sum (stats$Total)
+```
+
+```{r}
+xray.sum/total.sum*100
+```
+
+> Q2: What proportion of structures in the PDB are protein?
+
+```{r}
+protein.sum <- stats["Protein (only)","Total"]
+protein.sum/total.sum*100
+```
+86% of the structures are proteins.
+
+## Visualizing with Mol-star
+
+We will be analyzing the HIV-1 protease structure with PDB code: `1HSG`
+Mol-star homepage at: https://molstar.org/viewer/.
+
+![Figure 1. A first view of HIV-Pr](1HSG.png)
+
+![Figure 2. A view of where the ligand attaches in HIV-Pr ](1HSG copy.png)
+
+![Figure 3. A view of Aspartic Acid residue with Water ](1HSG copy 2.png)
+
+## Using bio3d package in R
+
+Bio3D package can help focus on structural bioinformatics analysis. It allows us to read and analyze PDB data.
+
+```{r}
+library (bio3d)
+```
+
+```{r}
+pdb <- read.pdb("1hsg")
+pdb
+```
+```{r}
+attributes(pdb)
+```
+
+We will see atom data with `pdb$atom`
+```{r}
+head(pdb$atom)
+```
+```{r}
+head(pdbseq(pdb))
+```
+We can make 3D visualizations we can use
+```{r}
+#library(bio3dview)
+#library(NGLVieweR)
+
+#view.pdb(pdb, colorScheme = "sse", backgroundColor = "skyblue") |>
+#  setSpin()
+```
+
+```{r}
+#library (bio3d)
+#sel <- atom.select(pdb, resno=25)
+#view.pdb(pdb, highlight = sel,
+#         highlight.style = "spacefill")
+```
+
+## Predicting Functional Motions of a Single Structure
+
+Normal Mode Analysis (NMA)
+
+```{r}
+adk <- read.pdb("6s36")
+```
+```{r}
+m <- nma(adk)
+plot (m)
+```
+```{r}
+#view.nma(m)
+```
+We can write out a trajectory of  predicted dynamics and view it in Mol-star
+```{r}
+#mktrj(m, file="nma.pdb")
+```
+

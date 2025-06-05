@@ -1,0 +1,170 @@
+---
+title: "Class 14: DESeq Mini Project"
+author: "Allen (A16897142)"
+format: pdf
+toc: True
+---
+
+# Required Libraries
+```{r}
+library(DESeq2)
+library(AnnotationDbi)
+library(org.Hs.eg.db)
+library(pathview)
+library(gage)
+library(gageData)
+```
+
+# Data Import
+```{r}
+colData <- read.csv("GSE37704_metadata.csv", row.names = 1)
+countData <- read.csv("GSE37704_featurecounts.csv", row.names = 1)
+head(colData)
+head(countData)
+```
+
+# Tidying Up Data
+```{r}
+colnames(countData)
+```
+```{r}
+counts <- countData[,-1]
+head(counts)
+```
+```{r}
+all(rownames(colData) == colnames(counts))
+```
+
+# Remove Zero Count Genes
+Some rows in `counts` for genes that we can not say anything about because they have zero expression in the particular tissue we are looking at.
+
+```{r}
+head(counts)
+```
+
+If the `rowSums()`is zero then we give a gene has not count data and we should exclude those genes.
+
+```{r}
+head(rowSums(counts) == 0)
+```
+```{r}
+to.keep <- rowSums(counts) !=0
+cleancounts <- counts[to.keep,]
+```
+
+> Q1. How many genes do we have left?
+
+```{r}
+nrow(cleancounts)
+```
+
+# Setup DESeq object for analysis
+```{r}
+dds <- DESeqDataSetFromMatrix(countData = cleancounts,
+                              colData = colData,
+                              design = ~condition)
+```
+
+
+# Run DESeq analysis
+
+```{r}
+dds <- DESeq(dds)
+```
+
+# Extract Results
+```{r}
+res <- results(dds)
+head(res)
+```
+
+# Add Gene Annotation
+```{r}
+res$name <- mapIds(x=org.Hs.eg.db,
+                    keys=rownames(res),
+                    keytype = "ENSEMBL",
+                   column = "SYMBOL")
+res$entrez <- mapIds(x=org.Hs.eg.db,
+                    keys=rownames(res),
+                    keytype = "ENSEMBL",
+                   column = "ENTREZID")
+head(res)
+```
+
+# Save my results to a CSV file
+
+```{r}
+write.csv(res, file="results.csv")
+```
+
+
+# Result Visualization
+```{r}
+mycols <- rep("gray", nrow(res))
+mycols[res$log2FoldChange <= -2] <- "lightcoral"
+mycols[res$log2FoldChange >= 2] <- "lightcoral"
+mycols[res$padj >= 0.005] <- "gray"
+plot(res$log2FoldChange,-log(res$padj),col=mycols)
+abline(v=-2, col="lightcoral")
+abline(v=+2, col="lightcoral")
+abline(h=-log(0.005),col="lightcoral")
+```
+```{r}
+library(ggplot2)
+ggplot(as.data.frame(res))+
+  aes(log2FoldChange, -log10(padj)) +
+  geom_point(col=mycols) +
+  scale_color_manual(values = c("gray", "lightcoral")) +
+  geom_vline(xintercept = (-2), color = "lightcoral") +    
+  geom_vline(xintercept = (2), color = "lightcoral") +
+  geom_hline(yintercept = -log10(0.005), color = "lightcoral") +
+  labs(x = "log2 Fold Change", y = "-log10 Adjusted P-value", title = "Volcano Plot Depicting Regulation of Genes on a Treatment")+
+  theme_bw()
+
+```
+
+# Pathway Analysis
+```{r}
+data(go.sets.hs)
+data(go.subs.hs)
+```
+```{r}
+foldchanges <- res$log2FoldChange
+names(foldchanges) = res$entrez
+head(foldchanges)
+```
+```{r}
+gobpsets = go.sets.hs[go.subs.hs$BP]
+
+gobpres = gage(foldchanges, gsets=gobpsets, same.dir=TRUE)
+head(gobpres$less,5)
+```
+
+```{r}
+data(kegg.sets.hs)
+keggres <- gage(foldchanges, gsets=kegg.sets.hs)
+```
+```{r}
+attributes(keggres)
+```
+```{r}
+head(keggres$less)
+```
+```{r}
+pathview(gene.data=foldchanges, pathway.id="hsa04110")
+```
+![](hsa04110.pathview.png)
+
+## Reactome Analysis Online
+
+We need to make a file of our significant genes that we ca upload to the reactome website: 
+```{r}
+sig_genes <- res[res$padj <= 0.05 & !is.na(res$padj), "name"]
+print(paste("Total number of significant genes:", length(sig_genes)))
+```
+```{r}
+write.table(sig_genes, file="significant_genes.txt", row.names=FALSE, col.names=FALSE, quote=FALSE)
+```
+
+![](Cell_Cycle.png)
+

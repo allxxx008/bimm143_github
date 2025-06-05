@@ -1,0 +1,237 @@
+---
+title: "Class 18: Pertussis Mini Project"
+author: "Allen (A16897142)"
+format: pdf
+toc: True
+---
+
+## Background
+
+Pertussis (or whooping cough) is a common lung infection cause by the bacteria *B. Pertussis*. The CDC tracks the cases of Pertussis each year: https://tinyurl.com/pertussiscdc
+
+## Examining Cases
+
+```{r, include=FALSE}
+cdc <- data.frame (
+                                             year = c(1922L,1923L,1924L,
+                                                      1925L,1926L,1927L,1928L,
+                                                      1929L,1930L,1931L,
+                                                      1932L,1933L,1934L,1935L,
+                                                      1936L,1937L,1938L,1939L,
+                                                      1940L,1941L,1942L,
+                                                      1943L,1944L,1945L,1946L,
+                                                      1947L,1948L,1949L,1950L,
+                                                      1951L,1952L,1953L,1954L,
+                                                      1955L,1956L,1957L,
+                                                      1958L,1959L,1960L,1961L,
+                                                      1962L,1963L,1964L,1965L,
+                                                      1966L,1967L,1968L,
+                                                      1969L,1970L,1971L,1972L,
+                                                      1973L,1974L,1975L,1976L,
+                                                      1977L,1978L,1979L,1980L,
+                                                      1981L,1982L,1983L,
+                                                      1984L,1985L,1986L,1987L,
+                                                      1988L,1989L,1990L,1991L,
+                                                      1992L,1993L,1994L,
+                                                      1995L,1996L,1997L,1998L,
+                                                      1999L,2000L,2001L,2002L,
+                                                      2003L,2004L,2005L,2006L,
+                                                      2007L,2008L,2009L,
+                                                      2010L,2011L,2012L,2013L,
+                                                      2014L,2015L,2016L,2017L,
+                                                      2018L,2019L,2020L,
+                                                      2021L,2022L,2023L,2024L),
+                     cases = c(107473,164191,
+                                                      165418,152003,202210,181411,
+                                                      161799,197371,166914,
+                                                      172559,215343,179135,
+                                                      265269,180518,147237,
+                                                      214652,227319,103188,183866,
+                                                      222202,191383,191890,
+                                                      109873,133792,109860,
+                                                      156517,74715,69479,120718,
+                                                      68687,45030,37129,
+                                                      60886,62786,31732,28295,
+                                                      32148,40005,14809,11468,
+                                                      17749,17135,13005,6799,
+                                                      7717,9718,4810,3285,
+                                                      4249,3036,3287,1759,
+                                                      2402,1738,1010,2177,2063,
+                                                      1623,1730,1248,1895,
+                                                      2463,2276,3589,4195,
+                                                      2823,3450,4157,4570,2719,
+                                                      4083,6586,4617,5137,
+                                                      7796,6564,7405,7298,
+                                                      7867,7580,9771,11647,
+                                                      25827,25616,15632,10454,
+                                                      13278,16858,27550,18719,
+                                                      48277,28639,32971,20762,
+                                                      17972,18975,15609,
+                                                      18617,6124,2116,3044,7063,35493)
+                   )
+```
+
+>Q1. Make a plot of pertussis cases per year using ggplot:
+
+```{r}
+library(ggplot2)
+
+ggplot(cdc) +
+  aes(year, cases) +
+  geom_line()+
+  geom_point()
+```
+
+>Q2. Add some key time points in our history of interactions with Pertussis. These include the rollout of the WP vaccine, and the switch to the aP vaccine in 1996.
+
+Use `geom_vline()` to add some vertical lines to indicate dates.
+```{r}
+ggplot(cdc) +
+  aes(year, cases) +
+  geom_line()+
+  geom_point()+
+  geom_vline(xintercept = 1945, col = "#B22222")+
+  geom_vline(xintercept = 1996, col = "navy")+
+  geom_vline(xintercept = 2020, col = "green")
+```
+Mounting evidence suggests that the newer **aP** vaccine is less effective over long term of disease prevention thatn the **wP** vaccine that was replaced. This means that vaccine protection wanes more rapidly with aP over wP. There seems to be an increase of cases after the introduction and there could be economic reasons, biological reasons, or social reasons like COVID impacting cases.
+
+## Entering the CMI-PB project
+
+CMI-PB (Computational Models of Immunity = Pertussis boost). There major goal is to determine the immune response's difference with aP and wP.
+
+CMI-PB makes their data available freely. They store it in a database composed different tables. Here we will acess a few of these.
+
+Use **jsonlite** package to read the data
+
+```{r}
+library(jsonlite)
+
+subject <- read_json("https://www.cmi-pb.org/api/v5_1/subject", simplifyVector = TRUE)
+```
+
+>Q3. How many subjects are there in this dataset?
+
+```{r}
+nrow(subject)
+```
+
+> Q4. How many "aP" and "wP" are there?
+
+```{r}
+table(subject$infancy_vac)
+```
+
+>Q5. How many Male/Female are in this dataset?
+
+```{r}
+table(subject$biological_sex)
+```
+
+>Q6. How about gender and race number?
+
+```{r}
+table(subject$race, subject$biological_sex)
+```
+
+>Q7. Is this representative of the US population?
+
+Heck to the no! This is UCSD students demographics.
+
+
+Let's read another table：
+
+```{r}
+specimen <- read_json("https://www.cmi-pb.org/api/v5_1/specimen", simplifyVector = TRUE)
+
+ab_data <- read_json("http://cmi-pb.org/api/v5_1/plasma_ab_titer", simplifyVector = TRUE)
+```
+
+```{r}
+head(specimen)
+```
+We want to link these tables together. We will be using **dplyr** package and the `inner_join()` function.
+
+```{r}
+library(dplyr)
+
+meta <- inner_join(subject, specimen)
+head(meta)
+```
+
+```{r}
+head(ab_data)
+```
+```{r}
+abdata <- inner_join(ab_data, meta)
+head(abdata)
+```
+
+> Q8. How many antibody isotypes are there?
+
+```{r}
+table(abdata$isotype)
+```
+
+> Q9. How many different antigens are measured in the dataset?
+
+```{r}
+table(abdata$antigen)
+```
+
+>Q10. Make a boxplot of antigen levels across the whole dataset:
+
+```{r}
+ggplot(abdata)+
+  aes(MFI, antigen) +
+  geom_boxplot()
+```
+
+> Q.11 Are there any obvious differences between aP and wP values?
+
+```{r}
+ggplot(abdata)+
+  aes(MFI, antigen, col=infancy_vac) +
+  geom_boxplot()
+```
+
+## Focus on IgG Data
+
+```{r}
+igg <- abdata |> filter(isotype == "IgG")
+
+head(igg)
+```
+
+```{r}
+ggplot(igg)+
+  aes(MFI_normalised, antigen, col=infancy_vac)+
+  geom_boxplot()+
+  facet_wrap(~visit)
+```
+
+Let's focus further in one of these antigens and pick **PT**, the main toxin of the bacteria in the **2021_dataset** again for **IgG** antibody isotype.
+
+```{r}
+table(igg$dataset)
+```
+```{r}
+pt_igg <- abdata |> filter(isotype == "IgG", antigen == "PT", dataset == "2021_dataset")
+```
+```{r}
+dim(pt_igg)
+```
+```{r}
+ggplot(pt_igg)+
+  aes(actual_day_relative_to_boost,
+      MFI_normalised,
+      col=infancy_vac,
+      group=subject_id)+
+  geom_point()+
+  geom_line()+
+  theme_bw()+
+  geom_vline(xintercept=0)+
+  geom_vline(xintercept=14)
+```
+
+

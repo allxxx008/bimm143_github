@@ -1,0 +1,36 @@
+---
+title: "Class 11: AlphaFold"
+author: "Allen (A16897142)"
+format: pdf
+---
+
+Here are the results from AlphaFold to try to interpret the models and quality of the score metrics from PDB:
+
+```{r}
+library(bio3d)
+
+pth <- "dimer_23119/"
+pdb.files <- list.files(path = pth, full.names = TRUE, pattern = ".pdb")
+```
+
+Now to align and superimpose the models
+```{r}
+file.exists(pdb.files)
+```
+```{r}
+pdbs <- pdbaln(pdb.files, fit=TRUE, exefile="msa")
+```
+```{r, fig.width=12, fig.height=8}
+library(bio3d)
+plot(pdbs)
+```
+
+```{r}
+plot(pdbs$b[1,],typ="l", ylim=c(0,100), ylab="pLDDR score")
+lines(pdbs$b[2,], type ="l",col="lightblue")
+lines(pdbs$b[3,], type ="l",col="lightgreen")
+lines(pdbs$b[4,], type ="l",col="yellow")
+lines(pdbs$b[5,], type ="l",col="pink")
+```
+
+

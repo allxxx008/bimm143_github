@@ -1,0 +1,285 @@
+---
+title: "Class 13: DESeq2"
+author: "Allen (A16897142)"
+format: pdf
+toc: True
+---
+# Background
+We will be analyzing some RNA Sequencing data on the effects of steroid drugs on airway cells in the lungs.
+
+There are two main inputs we need for the analysis. These are:
+- `countData`: counts for genes in rows with experiments in the columns
+- `colData`: or metadata that tells us about the design of the experiment. Or what is in the columns of countData
+
+```{r}
+counts <- read.csv("airway_scaledcounts.csv",row.names = 1)
+metadata <- read.csv("airway_metadata.csv")
+```
+
+> Q1. How many genes are in this dataset? 
+
+```{r}
+nrow(counts)
+```
+> Q2. How many ‘control’ cell lines do we have? 
+
+```{r}
+metadata$dex
+sum(metadata$dex == "control")
+```
+
+# Toy differential gene expression
+
+Let's try finding the average of the "control" and "treated" columns to see any difference.
+
+1. Find the control columns.
+2. Extract the genes that have "control" values.
+3. Calculate the `mean()` for each gene.
+
+```{r}
+all(colnames(counts) == metadata$id)
+```
+The $dex columns tells me whether we have "control" or "treated"
+```{r}
+control.inds <- metadata$dex == "control"
+```
+This is step 2. Extracting the control values.
+```{r}
+control.counts <- counts[,control.inds]
+```
+Step 3. Calculate the mean value for each gene in these control columns
+```{r}
+control.mean <- rowMeans(control.counts)
+```
+
+> Q3. Do the same for "treatment" values
+
+```{r}
+treated.inds <- metadata$dex == "treated"
+```
+```{r}
+treated.counts <- counts[,treated.inds]
+```
+```{r}
+treated.mean <- rowMeans(treated.counts)
+```
+
+> Q4. Make  a plot of `control.mean` vs `treated.mean`
+
+```{r}
+meancounts <- data.frame(control.mean, treated.mean)
+head(meancounts)
+```
+```{r}
+library(ggplot2)
+
+ggplot(meancounts)+
+  aes(control.mean,treated.mean)+
+  geom_point(alpha=0.3)
+```
+And now we can see there are so many points and it is very skewed to the beginning. We use the log function.
+
+```{r}
+library(ggplot2)
+
+ggplot(meancounts)+
+  aes(control.mean,treated.mean)+
+  geom_point(alpha=0.3)+
+  scale_x_log10() +
+  scale_y_log10() 
+```
+#TREATED/CONTROL
+```{r}
+log2(20/20)
+```
+Doubling (1)
+```{r}
+log2(40/20)
+```
+Halving (-1)
+```{r}
+log2(20/40)
+```
+
+So now we will focus only on the genes with a log2 "fold-change" of +2 as so-called UP REGULATED and -2 as DOWN REGULATED
+
+Log2 fold change value to our `meancounts`data.frame:
+```{r}
+meancounts$log2fc <- log2(meancounts$treated.mean/meancounts$control.mean)
+
+head(meancounts)
+```
+
+> Q. Remove any "zero count" genes from our dataset to help with further analysis.
+
+```{r}
+to.keep <- rowSums(meancounts[,1:2]== 0)== 0
+sum(to.keep)
+```
+```{r}
+mycounts <- meancounts[to.keep,]
+head(mycounts)
+```
+
+> Q. How many genes are "up regulated" at a log2fc threshold of +2?
+
+```{r}
+sum(mycounts$log2fc >= 2)
+```
+> Q. How many genes are "down regulated" at a log2fc threshold of -2?
+
+```{r}
+sum(mycounts$log2fc <= -2)
+```
+
+>Q. Do we trust these results?
+
+We do not trust these results because there is no statistical evidence to tell us what is significant or not. DESeq2 will help us.
+
+```{r, message = FALSE}
+library(DESeq2)
+```
+
+```{r}
+dds <- DESeqDataSetFromMatrix(countData = counts,
+                       colData = metadata,
+                       design = ~dex)
+```
+We can now run our DESeq analysis
+
+```{r}
+dds <- DESeq(dds)
+res <- results(dds)
+```
+
+To see the results:
+```{r}
+head(res)
+```
+
+# Results Figure: Volcano Plot
+
+Figure 1: Plot of the P-Value vs the log2FC
+```{r}
+plot(res$log2FoldChange,log(res$padj))
+```
+```{r}
+log(0.3)
+log(0.00000000001)
+```
+
+We can flip the y-axis by adding a minus sign and help make it easy to interpret the data.
+```{r}
+plot(res$log2FoldChange,-log(res$padj))
+abline(v=-2, col="blue")
+abline(v=+2, col="red")
+abline(h=-log(0.005),col="green")
+```
+Time to add some color!
+```{r}
+mycols <- rep("gray", nrow(res))
+mycols[res$log2FoldChange <= -2] <- "lightcoral"
+mycols[res$log2FoldChange >= 2] <- "lightcoral"
+mycols[res$padj >= 0.005] <- "gray"
+plot(res$log2FoldChange,-log(res$padj),col=mycols)
+abline(v=-2, col="lightcoral")
+abline(v=+2, col="lightcoral")
+abline(h=-log(0.005),col="lightcoral")
+```
+
+> Make a ggplot volcano plot with colors and lines as anootation along with nice axis labels.
+
+```{r}
+ggplot(as.data.frame(res))+
+  aes(res$log2FoldChange,res$padj)+
+  geom_point()+
+  scale_y_log10()
+```
+
+```{r}
+ggplot(as.data.frame(res))+
+  aes(log2FoldChange, -log10(padj)) +
+  geom_point(col=mycols) +
+  scale_color_manual(values = c("gray", "lightcoral")) +
+  geom_vline(xintercept = (-2), color = "lightcoral") +    
+  geom_vline(xintercept = (2), color = "lightcoral") +
+  geom_hline(yintercept = -log10(0.005), color = "lightcoral") +
+  labs(x = "log2 Fold Change", y = "-log10 Adjusted P-value", title = "Volcano Plot Depicting Regulation of Genes on a Treatment")+
+  theme_bw()
+```
+
+## Day 2 Class 14: 
+
+First we want to add gene symbols (e.g. HBB for hemoglobin) so we know the genes we are working with. We will be translating between ENSEMBLE ids where we have rownames in.
+
+```{r}
+head(rownames(res))
+```
+
+The following are installed from bioconductor with `BiocManager::install("AnnotationDbi")`
+```{r}
+library(AnnotationDbi)
+library(org.Hs.eg.db)
+```
+```{r}
+columns(org.Hs.eg.db)
+```
+
+```{r}
+##Anotating the genes in different databases
+res$name <- mapIds(x=org.Hs.eg.db,
+                    keys=rownames(res),
+                    keytype = "ENSEMBL",
+                   column = "SYMBOL")
+res$entrez <- mapIds(x=org.Hs.eg.db,
+                    keys=rownames(res),
+                    keytype = "ENSEMBL",
+                   column = "ENTREZID")
+head(res)
+```
+
+Let's save our annotated results to a file!
+
+```{r}
+write.csv(res, file="my_annotated_results.csv")
+```
+
+# Pathway Analysis
+
+Install the packages we need to be able to do our pathway analysis:: Run in the R console. `BiocManager::install(c("pathview","gage","gageData"))`
+
+```{r}
+library(gage)
+library(gageData)
+library(pathview)
+```
+
+```{r}
+data(kegg.sets.hs)
+# Examine the first 3 pathways
+head(kegg.sets.hs, 3)
+```
+
+To run pathway analysis we will use `gage()`and it will require a wee "vector of importance". We will use the Lof2FC results from our `res`object.
+
+```{r}
+foldchanges <- res$log2FoldChange
+names(foldchanges) = res$entrez
+head(foldchanges)
+```
+```{r}
+keggres <- gage(foldchanges, gsets=kegg.sets.hs)
+```
+```{r}
+attributes(keggres)
+```
+```{r}
+head(keggres$less)
+#These are the pathways where we can see overlap
+```
+
+Now we can use our foldchange results with ant of the highlighted pathway ids above to see how the genes overlap.
+```{r}
+pathview(gene.data=foldchanges, pathway.id="hsa05310")
+```
+![Figure 1: The genes that are involved (upregulated and downregulated) in the asthma pathway](hsa05310.pathview.png)
