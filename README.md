@@ -25,10 +25,4 @@ My classwork from [BIMM143 SP25](https://allxxx008.github.io/bimm143_github/) at
 
 - Class 15 [Github]
 
-- Class 16 [UNIX]
-
-- Class 17 [UNIX Miniproject]
-
 - Class 18 [Pertussis Mini Project]
-
-- Class 19 [Cancer Mutation Mini Project]
