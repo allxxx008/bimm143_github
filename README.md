@@ -7,7 +7,7 @@ My classwork from [BIMM143 SP25](https://allxxx008.github.io/bimm143_github/) at
 
 - Class 06 [R Functions](class6functions/class6functions.md)
   
-- Class 07 [Machine Learning](class07machinelearning/class07machinelearning.md)
+- Class 07 [Machine Learning](https://github.com/allxxx008/bimm143_github/blob/main/class07machinelearning/class7.md)
   
 - Class 08 [Breast Cancer Mini Project]
 
