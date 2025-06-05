@@ -21,6 +21,6 @@ My classwork from [BIMM143 SP25](https://allxxx008.github.io/bimm143_github/) at
 
 - Class 14 [RNA Seq Mini Project](https://github.com/allxxx008/bimm143_github/blob/main/class14/class14.md)
 
-- Class 17 [Analyzing Sequence in Cloud](class157class17.md)
+- Class 17 [Analyzing Sequence in Cloud](class17/class17.md)
 
 - Class 18 [Pertussis Mini Project](https://github.com/allxxx008/bimm143_github/blob/main/class18pertussius/class18pertussius.md)
