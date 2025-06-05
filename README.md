@@ -17,7 +17,7 @@ My classwork from [BIMM143 SP25](https://allxxx008.github.io/bimm143_github/) at
 
 - Class 12 [Genomic Informatics](https://github.com/allxxx008/bimm143_github/blob/main/class12homework/class12genomehomework.md)
 
-- Class 13 [Trascriptomics]()
+- Class 13 [Trascriptomics](https://github.com/allxxx008/bimm143_github/blob/main/class13deseq/class13rnaseq.md)
 
 - Class 14 [RNA Seq Mini Project]()
 
