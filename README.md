@@ -19,8 +19,8 @@ My classwork from [BIMM143 SP25](https://allxxx008.github.io/bimm143_github/) at
 
 - Class 13 [Trascriptomics](https://github.com/allxxx008/bimm143_github/blob/main/class13deseq/class13rnaseq.md)
 
-- Class 14 [RNA Seq Mini Project]()
+- Class 14 [RNA Seq Mini Project](https://github.com/allxxx008/bimm143_github/blob/main/class14/class14.md)
 
-- Class 15 [Github]()
+- Class 15 [Github](class15/class15.md)
 
 - Class 18 [Pertussis Mini Project]
