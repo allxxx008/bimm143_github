@@ -15,9 +15,7 @@ My classwork from [BIMM143 SP25](https://allxxx008.github.io/bimm143_github/) at
 
 - Class 10 [Structural Bioinformatics](https://github.com/allxxx008/bimm143_github/blob/main/class10structuralbioinfo/class10structuralbioinfo.md)
 
-- Class 11 [AlphaFold]()
-
-- Class 12 [Genomic Informatics]()
+- Class 12 [Genomic Informatics](https://github.com/allxxx008/bimm143_github/blob/main/class12homework/class12genomehomework.md)
 
 - Class 13 [Trascriptomics]()
 
