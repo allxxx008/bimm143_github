@@ -13,7 +13,7 @@ My classwork from [BIMM143 SP25](https://allxxx008.github.io/bimm143_github/) at
 
 - Class 09 [Halloween Candy Mini Project](https://github.com/allxxx008/bimm143_github/blob/main/class09halloweencandy/class09halloweencandy.md)
 
-- Class 10 [Structural Bioinformatics]()
+- Class 10 [Structural Bioinformatics](https://github.com/allxxx008/bimm143_github/blob/main/class10structuralbioinfo/class10structuralbioinfo.md)
 
 - Class 11 [AlphaFold]()
 
