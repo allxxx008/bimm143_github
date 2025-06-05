@@ -9,7 +9,7 @@ My classwork from [BIMM143 SP25](https://allxxx008.github.io/bimm143_github/) at
   
 - Class 07 [Machine Learning](https://github.com/allxxx008/bimm143_github/blob/main/class07machinelearning/class7.md)
   
-- Class 08 [Breast Cancer Mini Project]()
+- Class 08 [Breast Cancer Mini Project](https://github.com/allxxx008/bimm143_github/blob/main/class8breastcancer/class8breastcancer.md)
 
 - Class 09 [Halloween Candy Mini Project]()
 
