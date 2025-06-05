@@ -1,7 +1,7 @@
 # BIMM143
 My classwork from [BIMM143 SP25](https://allxxx008.github.io/bimm143_github/) at UC San Diego
 
-- Class 04 [Intro to R]()
+- Class 04 [Intro to R](https://github.com/allxxx008/bimm143_github/blob/main/class4practice/class04.md)
 
 - Class 05 [Advanced graphics with **ggplot2**](https://github.com/allxxx008/bimm143_github/blob/main/class5ggplot/class5ggplot.md)
 
