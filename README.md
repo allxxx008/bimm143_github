@@ -9,5 +9,26 @@ My classwork from [BIMM143 SP25](https://allxxx008.github.io/bimm143_github/) at
   
 - Class 07 [Machine Learning](class07machinelearning/class07machinelearning.md)
   
-- Class 08
+- Class 08 [Breast Cancer Mini Project]
 
+- Class 09 [Halloween Candy Mini Project]
+
+- Class 10 [Structural Bioinformatics]
+
+- Class 11 [AlphaFold]
+
+- Class 12 [Genomic Informatics]
+
+- Class 13 [Trascriptomics]
+
+- Class 14 [RNA Seq Mini Project]
+
+- Class 15 [Github]
+
+- Class 16 [UNIX]
+
+- Class 17 [UNIX Miniproject]
+
+- Class 18 [Pertussis Mini Project]
+
+- Class 19 [Cancer Mutation Mini Project]
