@@ -11,7 +11,7 @@ My classwork from [BIMM143 SP25](https://allxxx008.github.io/bimm143_github/) at
   
 - Class 08 [Breast Cancer Mini Project](https://github.com/allxxx008/bimm143_github/blob/main/class8breastcancer/class8breastcancer.md)
 
-- Class 09 [Halloween Candy Mini Project]()
+- Class 09 [Halloween Candy Mini Project](https://github.com/allxxx008/bimm143_github/blob/main/class09halloweencandy/class09halloweencandy.md)
 
 - Class 10 [Structural Bioinformatics]()
 
